@@ -2307,8 +2307,8 @@ Rigidbody:
   m_GameObject: {fileID: 928874459}
   serializedVersion: 4
   m_Mass: 57020
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: 1
+  m_AngularDrag: 4
   m_CenterOfMass: {x: 0, y: 0.7, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -3567,6 +3567,10 @@ MonoBehaviour:
   - {fileID: 1208321947}
   - {fileID: 1851593820}
   - {fileID: 693492378}
+  m_NumGroundedWheels: 0
+  m_Grounded: 0
+  m_LeftWheel: 1
+  m_RightWheel: 0
 --- !u!1 &1602318924
 GameObject:
   m_ObjectHideFlags: 0
@@ -3836,6 +3840,10 @@ MonoBehaviour:
   - {fileID: 1749546097}
   - {fileID: 1689150374}
   - {fileID: 1087929410}
+  m_NumGroundedWheels: 0
+  m_Grounded: 0
+  m_LeftWheel: 0
+  m_RightWheel: 1
 --- !u!1 &1726981053
 GameObject:
   m_ObjectHideFlags: 0

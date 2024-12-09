@@ -10,11 +10,28 @@ public class DriveWheel : MonoBehaviour
 	[SerializeField] private Rigidbody m_RB;
 	[SerializeField] private TankSO m_Data;
 	[SerializeField] private Suspension[] m_SuspensionWheels;
-	private int m_NumGroundedWheels;
-	private bool m_Grounded;
+	[SerializeField] private int m_NumGroundedWheels;
+	[SerializeField] private bool m_Grounded;
+
+	[SerializeField] private bool m_LeftWheel = false;
+	[SerializeField] private bool m_RightWheel = false;
 
 	private float m_Acceleration;
+	private float m_SteerAmount;
 	public void SetAcceleration(float amount) => m_Acceleration = amount;
+
+	public void SetSteer(float amount)
+	{
+		if(m_LeftWheel)
+        {
+			m_SteerAmount = amount * 0.3f;
+		}
+
+		if (m_RightWheel)
+		{
+			m_SteerAmount = -amount * 0.3f;
+		}
+	}
 
 	public void Init(TankSO inData, Rigidbody _RBRef)
 	{
@@ -34,16 +51,36 @@ public class DriveWheel : MonoBehaviour
 	{
 		if (newGrounded)
 		{
+			m_Grounded = true;
 			m_NumGroundedWheels++;
 		}
 		else
 		{
 			m_NumGroundedWheels--;
+
+			if(m_NumGroundedWheels == 0)
+            {
+				m_Grounded = false;
+            }
 		}
 	}
 
 	private void FixedUpdate()
 	{
+		if(m_Grounded)
+        {
+			float tracktion = ((float)m_NumGroundedWheels / (float)m_SuspensionWheels.Length);
+
+			if(Mathf.Abs(m_SteerAmount) > 0.3)
+            {
+				m_RB?.AddForceAtPosition(gameObject.transform.forward * m_Acceleration * 3 * tracktion * m_SteerAmount, gameObject.transform.position, ForceMode.Acceleration);
+			}
+			else
+            {
+				m_RB?.AddForceAtPosition(gameObject.transform.forward * m_Acceleration * 3 * tracktion, gameObject.transform.position, ForceMode.Acceleration);
+			}
+		}
+
 		//deal with acceleration here
 		//you could retrofit this to be a coroutine based on when SetAcceleration brings in a value or a 0
 		//TIP: acceleration is not as simple as plugging values in from the typeData, Unity works in metric units (metric tons, meters per second, etc)

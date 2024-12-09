@@ -86,30 +86,18 @@ public class TankController : MonoBehaviour
 	private void Handle_SteerPerformed(InputAction.CallbackContext context)
 	{
 		m_InSteer = context.ReadValue<float>();
-
-		if (m_IsSteering) return;
-
-		m_IsSteering = true;
-
-		m_CRSteer = StartCoroutine(C_SteerUpdate());
+		foreach (DriveWheel wheel in m_DriveWheels)
+		{
+			wheel.SetSteer(m_InSteer);
+		}
 	}
+
 	private void Handle_SteerCanceled(InputAction.CallbackContext context)
 	{
 		m_InSteer = context.ReadValue<float>();
-
-		if (!m_IsSteering) return;
-
-		m_IsSteering = false;
-
-		StopCoroutine(m_CRSteer);
-	}
-	private IEnumerator C_SteerUpdate()
-	{
-		while (m_IsSteering)
+		foreach (DriveWheel wheel in m_DriveWheels)
 		{
-			// you could do a simple steering here with a transform.rotate
-			// or you can delete this coroutine and work out how to pass the steering value to each drivewheel as a positive or negative number to make the tank spin
-			yield return null;
+			wheel.SetSteer(m_InSteer);
 		}
 	}
 

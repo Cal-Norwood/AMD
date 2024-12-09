@@ -38,11 +38,27 @@ public class Suspension : MonoBehaviour
 			OnGroundedChanged?.Invoke(m_Grounded);
 		}
 
+        Bounce();
+
         //start this function by using the StatefulRaycast2D from IMD to work out how to do a grounded check using the springSize as a length and fire the event when the value for grounded changes
         //use the result of this ground check for the suspension spring
         //TIP: the tank is the moving part of the spring not the floor, draw the diagram
         //The tanks mass never changes either so is there any need to simulate forces in ForceMode.Force maybe ForceMode.Acceleration would keep the numbers smaller and easier to deal with????
 
         //to stop the tank from sliding you also need to conssider how much velocity is in the left/right direction and counter it here
+    }
+
+    public void Bounce()
+    {
+        Vector3 springDirection = -gameObject.transform.up;
+
+        if (Physics.Raycast(transform.position, springDirection.normalized, out RaycastHit hitInfo, m_SpringSize))
+        {
+            Vector3 worldVel = m_RB.GetPointVelocity(transform.position);
+            float suspensionOffset = m_SpringSize - hitInfo.distance;
+            float suspensionVelocity = (Vector3.Dot(worldVel, -springDirection.normalized));
+            float suspensionForce = (suspensionOffset * m_Data.SuspensionStrength) - (suspensionVelocity * m_Data.SuspensionDamper);
+            m_RB.AddForceAtPosition(-springDirection * suspensionForce, transform.position, ForceMode.Acceleration);
+        }
     }
 }
