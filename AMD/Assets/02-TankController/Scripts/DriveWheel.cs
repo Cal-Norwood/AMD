@@ -81,9 +81,14 @@ public class DriveWheel : MonoBehaviour
 			}
 		}
 
-		//deal with acceleration here
-		//you could retrofit this to be a coroutine based on when SetAcceleration brings in a value or a 0
-		//TIP: acceleration is not as simple as plugging values in from the typeData, Unity works in metric units (metric tons, meters per second, etc)
-		//No need to make a full engine simulation with gearing here that is going too deep, you have a couple of weeks at most for this
-	}
+        foreach (Suspension wheel in m_SuspensionWheels)
+        {
+            wheel.Bounce();
+        }
+
+        //deal with acceleration here
+        //you could retrofit this to be a coroutine based on when SetAcceleration brings in a value or a 0
+        //TIP: acceleration is not as simple as plugging values in from the typeData, Unity works in metric units (metric tons, meters per second, etc)
+        //No need to make a full engine simulation with gearing here that is going too deep, you have a couple of weeks at most for this
+    }
 }

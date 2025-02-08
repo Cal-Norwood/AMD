@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Tiger131_Suspension
   m_EditorClassIdentifier: 
   WheelDiameter: 0.7
-  SuspensionDamper: 10
+  SuspensionDamper: 8
   SuspensionStrength: 100
   SuspensionLayermask:
     serializedVersion: 2
     m_Bits: 1
   MaximumSlope: 30
   HullTraverseDegrees: 27
+  HorizontalDrag: 1.7

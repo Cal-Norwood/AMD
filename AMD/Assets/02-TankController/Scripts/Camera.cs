@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,19 +14,24 @@ public class CameraController : MonoBehaviour
 
 	[SerializeField] private Vector3 m_TargetOffset;
 
-	public void RotateSpringArm(Vector2 change)
-	{
-		//Break the problem down into 2; yaw and pitch
-		//yaw is dealt with first and is the world y rotation
-		//Then deal with pitch on the local x rotation
-		//This is where you limit the pitch value but the limits arent simple as you need to remap a (0 to 360) value into a (-180 to 180) value using the provided Remap function which is an extension of the float type
-		float b = 5;
-		float a = b.Remap360To180PN();
-		//you may want to limit the amount of change rather than after rotating so tha camera doesnt jitter. Refer to the healthComponent from C4E for the idea
+    public void RotateSpringArm(Vector2 change)
+    {
+        change.x *= m_Data.YawSensitivity;
+        change.y *= m_Data.PitchSensitivity;
 
-	}
+        Vector3 euler = m_SpringArmKnuckle.localEulerAngles;
 
-	public void ChangeCameraDistance(float amount)
+        float yaw = euler.y - change.x;
+        float pitch = (euler.x > 180) ? euler.x - 360 : euler.x;
+
+        pitch -= change.y;
+
+        pitch = Mathf.Clamp(pitch, m_Data.MinPitch, m_Data.MaxPitch);
+
+        m_SpringArmKnuckle.localRotation = Quaternion.Euler(pitch, yaw, 0);
+    }
+
+    public void ChangeCameraDistance(float amount)
 	{
 		m_CameraDist += amount;
 		//probably want to constrain this value
@@ -33,9 +39,9 @@ public class CameraController : MonoBehaviour
 
 	private void LateUpdate()
 	{
-		//set the Knuckle to be the position of the tank plus the offset
-		//REMEMBER: this script is ON THE TANK. It is pulling the camera each frame
+        m_SpringArmKnuckle.position = transform.position + m_TargetOffset;
 
-		//Expand here by using a sphere trace from the tank backwards to see if the camera needs to move forward, out the way of geometry
-	}
+        m_CameraMount.position = m_SpringArmKnuckle.position - m_SpringArmKnuckle.forward * m_CameraDist;
+        m_CameraMount.LookAt(m_SpringArmKnuckle.position);
+    }
 }

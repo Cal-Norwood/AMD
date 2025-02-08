@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb8e47b4194ec07449b428c9fd5e63c3, type: 3}
   m_Name: CameraDefaults
   m_EditorClassIdentifier: 
-  YawSensitivity: 1
-  PitchSensitivity: 1
+  YawSensitivity: 0.6
+  PitchSensitivity: 0.6
   ZoomSensitivity: 1
-  MaxPitch: 30
-  MinPitch: 89
+  MaxPitch: 80
+  MinPitch: -30
   MaxDist: 10
   MinDist: 1
   CameraProbeSize: 0.5

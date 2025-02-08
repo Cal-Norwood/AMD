@@ -11,4 +11,5 @@ public class SuspensionSO : ScriptableObject
 	public LayerMask SuspensionLayermask;
 	public float MaximumSlope;
 	public float HullTraverseDegrees;
+	public float HorizontalDrag;
 }
