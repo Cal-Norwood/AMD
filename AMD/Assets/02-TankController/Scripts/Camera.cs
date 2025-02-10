@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
 
         Vector3 euler = m_SpringArmKnuckle.localEulerAngles;
 
-        float yaw = euler.y - change.x;
+        float yaw = euler.y + change.x;
         float pitch = (euler.x > 180) ? euler.x - 360 : euler.x;
 
         pitch -= change.y;

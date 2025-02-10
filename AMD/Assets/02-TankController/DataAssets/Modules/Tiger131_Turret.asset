@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9542f2219ac333940b4e35e9545e2f6f, type: 3}
   m_Name: Tiger131_Turret
   m_EditorClassIdentifier: 
-  TurretTraverseSpeed: 21
-  BarrelTraverseSpeed: 35
-  DepressionLimit: 8
-  ElevationLimit: 15
+  TurretTraverseSpeed: 60
+  BarrelTraverseSpeed: 50
+  DepressionLimit: -10
+  ElevationLimit: 40

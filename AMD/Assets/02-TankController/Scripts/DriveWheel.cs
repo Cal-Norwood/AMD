@@ -20,7 +20,12 @@ public class DriveWheel : MonoBehaviour
 	private float m_SteerAmount;
 	public void SetAcceleration(float amount) => m_Acceleration = amount;
 
-	public void SetSteer(float amount)
+    private void Start()
+    {
+		m_Acceleration = MathF.Sqrt((m_Data.EngineData.HorsePower * (float)745.6992) / (m_RB.mass));
+    }
+
+    public void SetSteer(float amount)
 	{
 		if(m_LeftWheel)
         {

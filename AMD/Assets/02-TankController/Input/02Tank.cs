@@ -31,7 +31,7 @@ public partial class @AM_02Tank: IInputActionCollection2, IDisposable
                     ""name"": ""Accelerate"",
                     ""type"": ""Button"",
                     ""id"": ""33f16d51-dff8-436a-a28d-69ea024d2efe"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -71,6 +71,15 @@ public partial class @AM_02Tank: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SwitchAmmo"",
+                    ""type"": ""Button"",
+                    ""id"": ""a1d2ca08-7008-40c1-8e06-7cb187735c6b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -172,6 +181,39 @@ public partial class @AM_02Tank: IInputActionCollection2, IDisposable
                     ""action"": ""Accelerate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""0abe0b92-a265-47a2-8c53-1b507de71521"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchAmmo"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""a9c766e8-9958-4229-a93b-a18339b80eec"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchAmmo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""26808c01-ac0f-4f64-b952-82c3c207025f"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchAmmo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -185,6 +227,7 @@ public partial class @AM_02Tank: IInputActionCollection2, IDisposable
         m_Default_Fire = m_Default.FindAction("Fire", throwIfNotFound: true);
         m_Default_Aim = m_Default.FindAction("Aim", throwIfNotFound: true);
         m_Default_Zoom = m_Default.FindAction("Zoom", throwIfNotFound: true);
+        m_Default_SwitchAmmo = m_Default.FindAction("SwitchAmmo", throwIfNotFound: true);
     }
 
     ~@AM_02Tank()
@@ -256,6 +299,7 @@ public partial class @AM_02Tank: IInputActionCollection2, IDisposable
     private readonly InputAction m_Default_Fire;
     private readonly InputAction m_Default_Aim;
     private readonly InputAction m_Default_Zoom;
+    private readonly InputAction m_Default_SwitchAmmo;
     public struct DefaultActions
     {
         private @AM_02Tank m_Wrapper;
@@ -265,6 +309,7 @@ public partial class @AM_02Tank: IInputActionCollection2, IDisposable
         public InputAction @Fire => m_Wrapper.m_Default_Fire;
         public InputAction @Aim => m_Wrapper.m_Default_Aim;
         public InputAction @Zoom => m_Wrapper.m_Default_Zoom;
+        public InputAction @SwitchAmmo => m_Wrapper.m_Default_SwitchAmmo;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -289,6 +334,9 @@ public partial class @AM_02Tank: IInputActionCollection2, IDisposable
             @Zoom.started += instance.OnZoom;
             @Zoom.performed += instance.OnZoom;
             @Zoom.canceled += instance.OnZoom;
+            @SwitchAmmo.started += instance.OnSwitchAmmo;
+            @SwitchAmmo.performed += instance.OnSwitchAmmo;
+            @SwitchAmmo.canceled += instance.OnSwitchAmmo;
         }
 
         private void UnregisterCallbacks(IDefaultActions instance)
@@ -308,6 +356,9 @@ public partial class @AM_02Tank: IInputActionCollection2, IDisposable
             @Zoom.started -= instance.OnZoom;
             @Zoom.performed -= instance.OnZoom;
             @Zoom.canceled -= instance.OnZoom;
+            @SwitchAmmo.started -= instance.OnSwitchAmmo;
+            @SwitchAmmo.performed -= instance.OnSwitchAmmo;
+            @SwitchAmmo.canceled -= instance.OnSwitchAmmo;
         }
 
         public void RemoveCallbacks(IDefaultActions instance)
@@ -332,5 +383,6 @@ public partial class @AM_02Tank: IInputActionCollection2, IDisposable
         void OnFire(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
+        void OnSwitchAmmo(InputAction.CallbackContext context);
     }
 }

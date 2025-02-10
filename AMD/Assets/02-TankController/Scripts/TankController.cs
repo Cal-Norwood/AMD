@@ -49,6 +49,7 @@ public class TankController : MonoBehaviour
 		m_ActionMap.Default.Fire.canceled += Handle_FireCanceled;
 		m_ActionMap.Default.Aim.performed += Handle_AimPerformed;
 		m_ActionMap.Default.Zoom.performed += Handle_ZoomPerformed;
+		m_ActionMap.Default.SwitchAmmo.performed += Handle_AmmoSwitch;
 	}
 	private void OnDisable()
 	{
@@ -62,7 +63,8 @@ public class TankController : MonoBehaviour
 		m_ActionMap.Default.Fire.canceled -= Handle_FireCanceled;
 		m_ActionMap.Default.Aim.performed -= Handle_AimPerformed;
 		m_ActionMap.Default.Zoom.performed -= Handle_ZoomPerformed;
-	}
+        m_ActionMap.Default.SwitchAmmo.performed += Handle_AmmoSwitch;
+    }
 
 	private void Handle_AcceleratePerformed(InputAction.CallbackContext context)
 	{
@@ -122,5 +124,10 @@ public class TankController : MonoBehaviour
 	{
 		m_CameraController.ChangeCameraDistance(context.ReadValue<float>());
 		m_TurretController.SetRotationDirty();
+	}
+
+	private void Handle_AmmoSwitch(InputAction.CallbackContext context)
+	{
+		m_BarrelController.SwitchAmmunition(context.ReadValue<float>());
 	}
 }

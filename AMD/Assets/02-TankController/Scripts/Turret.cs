@@ -24,16 +24,60 @@ public class Turret : MonoBehaviour
 
 	public void SetRotationDirty()
 	{
+		if (m_RotationDirty)
+		{
+			return;
+		}
+		else
+		{
+			m_RotationDirty = true;
+			StartCoroutine(C_AimTurret());
+		}
 		//if already dirty then return
 		//else set the value and start the below coroutine
 	}
 
-	private IEnumerator C_AimTurret()
-	{
-		//Fix this to loop while the rotation is dirty, rotate towards the needed vector and unset dirty when facing
-		//TIP: simplfy the problem into 2D with the Vector3.ProjectOnPlane function and diagram it out. The turret rotates around the local y and the barrel around the local x
-		//Make use of the remap function as shown in Camera.cs to help
-		//extention here could include some SUVAT formula work to adjust the aim to hit where the camera is pointing, accounting for gravity
-		yield return null;
-	}
+    private IEnumerator C_AimTurret()
+    {
+        while (m_RotationDirty)
+        {
+            while (true)
+            {
+                Vector3 projectedCamTurret = Vector3.ProjectOnPlane(m_CameraMount.forward, m_Turret.up);
+                Quaternion targetRotationTurret = Quaternion.LookRotation(projectedCamTurret, m_Turret.up);
+
+				Vector3 projectedCamBarrel = Vector3.ProjectOnPlane(m_CameraMount.forward, m_Turret.right);
+                Quaternion targetRotationBarrel = Quaternion.LookRotation(projectedCamBarrel, m_Barrel.up);
+
+				float barrelPitch = Vector3.SignedAngle(m_Turret.forward, projectedCamBarrel, m_Barrel.right);
+
+                float adjustedDepressionLimit = m_Data.TurretData.DepressionLimit > 180 ? m_Data.TurretData.DepressionLimit - 360 : m_Data.TurretData.DepressionLimit;
+                float adjustedElevationLimit = m_Data.TurretData.ElevationLimit > 180 ? m_Data.TurretData.ElevationLimit - 360 : m_Data.TurretData.ElevationLimit;
+
+                barrelPitch = Mathf.Clamp(barrelPitch, m_Data.TurretData.DepressionLimit, m_Data.TurretData.ElevationLimit);
+
+                targetRotationBarrel = Quaternion.Euler(barrelPitch, targetRotationBarrel.eulerAngles.y, targetRotationBarrel.eulerAngles.z);
+
+                if (Quaternion.Angle(m_Turret.rotation, targetRotationTurret) > 0.1f)
+				{
+                    m_Turret.rotation = Quaternion.RotateTowards(m_Turret.rotation, targetRotationTurret, m_Data.TurretData.TurretTraverseSpeed * Time.deltaTime);
+                }
+
+				if(Quaternion.Angle(m_Barrel.rotation, targetRotationBarrel) > 0.1f)
+				{
+                    m_Barrel.rotation = Quaternion.RotateTowards(m_Barrel.rotation, targetRotationBarrel, m_Data.TurretData.BarrelTraverseSpeed * Time.deltaTime);
+                }
+
+                if (Quaternion.Angle(m_Turret.rotation, targetRotationTurret) < 0.1f && Quaternion.Angle(m_Barrel.rotation, targetRotationBarrel) < 0.1f)
+                {
+                    break;
+                }
+
+                yield return null;
+            }
+
+            m_Turret.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(m_CameraMount.forward, m_Turret.up), m_Turret.up);
+            m_RotationDirty = false;
+        }
+    }
 }
