@@ -18,11 +18,11 @@ public class DriveWheel : MonoBehaviour
 
 	private float m_Acceleration;
 	private float m_SteerAmount;
-	public void SetAcceleration(float amount) => m_Acceleration = amount;
+	public void SetAcceleration(float amount) => m_Acceleration = MathF.Sqrt((m_Data.EngineData.HorsePower * (float)745.6992)/ (m_RB.mass)) * amount;
 
     private void Start()
     {
-		m_Acceleration = MathF.Sqrt((m_Data.EngineData.HorsePower * (float)745.6992) / (m_RB.mass));
+		
     }
 
     public void SetSteer(float amount)
@@ -76,7 +76,7 @@ public class DriveWheel : MonoBehaviour
         {
 			float tracktion = ((float)m_NumGroundedWheels / (float)m_SuspensionWheels.Length);
 
-			if(Mathf.Abs(m_SteerAmount) > 0.3)
+            if (Mathf.Abs(m_SteerAmount) > 0.3)
             {
 				m_RB?.AddForceAtPosition(gameObject.transform.forward * m_Acceleration * 3 * tracktion * m_SteerAmount, gameObject.transform.position, ForceMode.Acceleration);
 			}

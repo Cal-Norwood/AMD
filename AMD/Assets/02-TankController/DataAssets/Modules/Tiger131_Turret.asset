@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TurretTraverseSpeed: 60
   BarrelTraverseSpeed: 50
-  DepressionLimit: -10
-  ElevationLimit: 40
+  DepressionLimit: 20
+  ElevationLimit: -60
